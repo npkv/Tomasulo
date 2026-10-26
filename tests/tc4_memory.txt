@@ -1,0 +1,24 @@
+# Test 4: load/store queue - store-to-load forwarding, a load that must wait
+# for an older store's unknown address, a load that bypasses a non-matching
+# store, and store data arriving late on the CDB.
+                   # of rs   Cycles in EX   Cycles in Mem   # of FUs
+Integer adder         3           1                            1
+FP adder              3           2                            1
+FP multiplier         2           8                            1
+Load/store unit       6           1             3              1
+
+ROB entries = 32
+Issue width = 1
+R1=8, R2=8, R3=16, F1=1.5, F2=2.5
+Mem[8]=10.0, Mem[16]=20.0, Mem[24]=30.0
+
+Mult.d F4, F1, F2
+Sd F4, 0(R1)
+Ld F5, 0(R2)
+Ld F6, 8(R1)
+Add R4, R3, R1
+Sd F2, 0(R4)
+Ld F7, 24(R0)
+Add.d F8, F5, F7
+Sd F8, 4(R1)
+Ld F9, 12(R0)

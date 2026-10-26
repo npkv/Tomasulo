@@ -1,0 +1,25 @@
+# Test 7: BTB aliasing.  Beq at word 1 and Bne at word 9 use the same BTB
+# entry (word address & 7 = 1), so they keep replacing each other's entry and
+# are mispredicted on every iteration.  Instructions at words 2-8 are only
+# ever on the wrong path and must never commit.
+                   # of rs   Cycles in EX   Cycles in Mem   # of FUs
+Integer adder         4           1                            1
+FP adder              3           2                            1
+FP multiplier         2           4                            1
+Load/store unit       4           1             2              1
+
+ROB entries = 32
+Issue width = 1
+R1=3, F1=1.0
+
+Addi R1, R1, -1
+Beq R0, R0, 7
+Addi R5, R5, 1
+Addi R6, R6, 1
+Add.d F2, F2, F1
+Sd F1, 40(R0)
+Addi R7, R7, 1
+Addi R8, R8, 1
+Addi R9, R9, 1
+Bne R1, R0, -10
+Add.d F3, F1, F1

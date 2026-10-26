@@ -1,0 +1,47 @@
+                     # of rs  Cycles in EX  Cycles in Mem  # of FUs
+Integer adder              4             1                        1
+FP adder                   3             2                        1
+FP multiplier              2             4                        1
+Load/store unit            4             1              2         1
+ROB entries = 32, Issue width = 1, CDB width = 1, Commit width = 1, BTB entries = 8
+
+                          ISSUE   EX        MEM       WB    COMMIT  
+Beq R1, R2, 3             1       2                         3       
+Ld F2, 0(R0)              4       5         6-7       8     9       
+Add.d F3, F2, F1          5       9-10                11    12      
+Sub R4, R3, R1            6       7                   9     13      
+Bne R4, R0, 1             7       10                        14      
+Sub.d F5, F3, F1          12      13-14               15    16      
+
+SQUASHED (wrong-path) INSTRUCTIONS
+                          ISSUE   EX        MEM       WB    COMMIT  
+Addi R3, R3, 100          2                                         
+Mult.d F3, F3, F3         8                                         
+Sub.d F5, F3, F1          9                                         
+
+REGISTER VALUES
+
+        R0        R1        R2        R3        R4        R5        R6        R7
+value:  0         1         1         5         4         0         0         0
+        R8        R9        R10       R11       R12       R13       R14       R15
+value:  0         0         0         0         0         0         0         0
+        R16       R17       R18       R19       R20       R21       R22       R23
+value:  0         0         0         0         0         0         0         0
+        R24       R25       R26       R27       R28       R29       R30       R31
+value:  0         0         0         0         0         0         0         0
+
+        F0        F1        F2        F3        F4        F5        F6        F7
+value:  0.0       2.0       7.0       9.0       0.0       7.0       0.0       0.0
+        F8        F9        F10       F11       F12       F13       F14       F15
+value:  0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+        F16       F17       F18       F19       F20       F21       F22       F23
+value:  0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+        F24       F25       F26       F27       F28       F29       F30       F31
+value:  0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+
+NON-ZERO MEMORY VALUES
+
+Addresses     Values
+0             7.0
+
+SUMMARY: 6 instructions committed in 16 cycles (IPC = 0.375); branches = 2, mispredicted = 2; squashed instructions = 3
